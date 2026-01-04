@@ -1,5 +1,5 @@
 import { renderListCell } from 'azure-devops-ui/List';
-import type { HomeTreeRenderer } from '../VariablesTree';
+import type { HomeTreeRenderer } from '../../HomeTree';
 
 export const filePropertyRenderer: HomeTreeRenderer['fileProperty'] = {
   name: {

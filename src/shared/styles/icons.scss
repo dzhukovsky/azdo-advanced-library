@@ -9,7 +9,8 @@ $fluent-icons: (
   DocumentKeyRegular: (regular, "\f011d"),
   MathFormulaRegular: (regular, "\e7e1"),
   CircleFilled: (filled, "\f2ba"),
-  LibraryColor: (filled, "\e76f", var(--icon-folder-color, #dcb67a)),
+  LibraryColor: (filled, "\e76f", var(--icon-folder-color)),
+  WarningColor: (filled, "\f880", var(--status-warning-text)),
 );
 
 @function fluent-font($style) {

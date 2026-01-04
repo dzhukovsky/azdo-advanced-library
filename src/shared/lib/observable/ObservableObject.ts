@@ -12,7 +12,10 @@ export abstract class ObservableObject<TSelf> extends Observable<
 > {
   private _modified = false;
 
-  private readonly _valueProps: ObservableObjectValue<unknown>[] = [];
+  private readonly _valueProps: (
+    | ObservableObject<unknown>
+    | ObservableObjectValue<unknown>
+  )[] = [];
   private readonly _arrayProps: ObservableObjectArray<
     ObservableObject<unknown>
   >[] = [];
@@ -26,6 +29,15 @@ export abstract class ObservableObject<TSelf> extends Observable<
       this._modified = value;
       this.notify(this, 'modified');
     }
+  }
+
+  protected addProperty<TValue extends ObservableObject<TValue>>(
+    value: TValue,
+  ) {
+    this._valueProps.push(value);
+    value.subscribe(() => this.recalculateModified());
+
+    return value;
   }
 
   protected addValueProperty<TValue>(

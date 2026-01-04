@@ -22,7 +22,7 @@ import {
 } from '@/shared/hooks/useNavigation';
 import { HomeTab } from './HomeTab';
 import type { HomeTabModel } from './HomeTab/HomeTabModel';
-import { MatrixTab } from './MatrixTab/MatrixTab';
+import { MatrixTab } from './MatrixTab';
 
 export const LibraryPage = () => {
   const { queryParams, isLoading, setQueryParams } = useNavigation({

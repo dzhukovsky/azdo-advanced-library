@@ -13,13 +13,14 @@ export type TextFieldCellProps = {
   iconProps?: IIconProps;
 } & Pick<
   React.InputHTMLAttributes<HTMLInputElement>,
-  'type' | 'readOnly' | 'required' | 'placeholder' | 'onChange'
+  'className' | 'type' | 'readOnly' | 'required' | 'placeholder' | 'onChange'
 >;
 
 export function TextFieldCell({
   value,
   state,
   iconProps,
+  className,
   ...inputProps
 }: TextFieldCellProps) {
   const isPasswordField = inputProps.type === 'password';
@@ -45,6 +46,7 @@ export function TextFieldCell({
                   iconProps && 'bolt-textfield-input-with-prefix',
                   state.type === 'Deleted' && 'state-deleted',
                   state.type === 'Error' && 'state-error',
+                  className,
                 )}
                 value={value}
                 spellCheck={false}

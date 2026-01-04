@@ -4,7 +4,6 @@ import type { ITreeItemEx } from 'azure-devops-ui/Utilities/TreeItemProvider';
 import type { RenderHandler, RenderOptions } from './createActionColumn';
 
 export type ActionColumnOptions<T> = Omit<ITreeColumn<T>, 'renderCell'> & {
-  id: string;
   renderCell: RenderHandler<T>;
   renderActions: RenderHandler<T>;
   contentClassName?: string;

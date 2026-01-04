@@ -23,6 +23,7 @@ export type TreeRenderer<TColumns extends string, TData extends TypedData> = {
 };
 
 export type RenderHandlerOptions<TData extends TypedData> = {
+  columnId: string;
   rowIndex: number;
   treeItem: ITreeItemEx<TData>;
   data: TData['data'];

@@ -1,7 +1,6 @@
 import { Card } from 'azure-devops-ui/Card';
 import { ObservableValue } from 'azure-devops-ui/Core/Observable';
 import {
-  type ITreeColumn,
   renderTreeRow,
   Tree,
   type TreeRowRenderer,
@@ -21,22 +20,19 @@ import type {
   ObservableVariableGroup,
 } from '@/features/variable-groups/models';
 import type { FilterFunc } from '@/shared/components/Table/useFiltering';
-import { createActionColumn } from '@/shared/components/Tree/createActionColumn';
-import { createExpandableActionColumn } from '@/shared/components/Tree/createExpandableActionColumn';
+import { createTreeColumns } from '@/shared/components/Tree/createTreeColumns';
 import { getLoadingProvider } from '@/shared/components/Tree/loadingProvider';
-import {
-  getRenderer,
-  type TreeRenderer,
-  type TypedData,
-} from '@/shared/components/Tree/types';
+import type { TreeRenderer, TypedData } from '@/shared/components/Tree/types';
 import { useFiltering } from '@/shared/components/Tree/useFiltering';
 import { useRowRenderer } from '@/shared/components/Tree/useRowRenderer';
-import { filePropertyRenderer } from './renderers/filePropertyRenderer';
-import { fileRenderer } from './renderers/fileRenderer';
-import { groupRenderer } from './renderers/groupRenderer';
-import { variableRenderer } from './renderers/variableRenderer';
+import {
+  filePropertyRenderer,
+  fileRenderer,
+  groupRenderer,
+  variableRenderer,
+} from './renderers';
 
-export type VariablesTreeProps = {
+export type HomeTreeProps = {
   items: ITreeItem<HomeTreeItem>[];
   filter: IFilter;
   loading?: boolean;
@@ -65,58 +61,21 @@ const useColumns = (itemProvider: ITreeItemProvider<HomeTreeItem>) => {
       (columns[index].width as ObservableValue<number>).value = width;
     };
 
-    const columns: ITreeColumn<HomeTreeItem>[] = [
-      createExpandableActionColumn<HomeTreeItem>({
-        id: 'name',
-        name: 'Name',
-        contentClassName: 'padding-vertical-0 padding-right-0',
-        onSize,
-        renderCell: (options) => {
-          const renderer = getRenderer(renderers, options.data.type);
-          return renderer.name.renderCell({
-            rowIndex: options.rowIndex,
-            treeItem: options.treeItem,
-            data: options.data.data,
-            provider: itemProvider,
-          });
+    return createTreeColumns({
+      columns: {
+        name: {
+          name: 'Name',
+          onSize,
+          width: new ObservableValue(-25),
         },
-        renderActions: (options) => {
-          const renderer = getRenderer(renderers, options.data.type);
-          return renderer.name.renderActions({
-            rowIndex: options.rowIndex,
-            treeItem: options.treeItem,
-            data: options.data.data,
-            provider: itemProvider,
-          });
+        value: {
+          name: 'Value / Last modified by',
+          width: new ObservableValue(-75),
         },
-        width: new ObservableValue(-25),
-      }),
-      createActionColumn<HomeTreeItem>({
-        id: 'value',
-        name: 'Value / Last modified by',
-        width: new ObservableValue(-75),
-        renderCell: (options) => {
-          const renderer = getRenderer(renderers, options.data.type);
-          return renderer.value.renderCell({
-            rowIndex: options.rowIndex,
-            treeItem: options.treeItem,
-            data: options.data.data,
-            provider: itemProvider,
-          });
-        },
-        renderActions: (options) => {
-          const renderer = getRenderer(renderers, options.data.type);
-          return renderer.value.renderActions({
-            rowIndex: options.rowIndex,
-            treeItem: options.treeItem,
-            data: options.data.data,
-            provider: itemProvider,
-          });
-        },
-      }),
-    ];
-
-    return columns;
+      },
+      renderers,
+      itemProvider,
+    });
   }, [itemProvider]);
 
   const renderRow = useCallback<TreeRowRenderer<HomeTreeItem>>(
@@ -151,11 +110,7 @@ const filterFunc: FilterFunc<HomeTreeItem> = (item, filterText) => {
   }
 };
 
-export const VariablesTree = ({
-  items,
-  filter,
-  loading,
-}: VariablesTreeProps) => {
+export const HomeTree = ({ items, filter, loading }: HomeTreeProps) => {
   const { filteredItems, isEmpty } = useFiltering(items, filter, filterFunc);
   const { columns } = useColumns(filteredItems);
 

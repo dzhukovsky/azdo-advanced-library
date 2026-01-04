@@ -1,9 +1,9 @@
 import { IconSize } from 'azure-devops-ui/Icon';
 import { Observer } from 'azure-devops-ui/Observer';
 import { TextFieldCell } from '@/shared/components/TextFieldCell';
-import { VariableNameActionsCell } from '../ActionCells/VariableNameActionsCell';
-import { VariableValueActionsCell } from '../ActionCells/VariableValueActionsCell';
-import type { HomeTreeRenderer } from '../VariablesTree';
+import type { HomeTreeRenderer } from '../../HomeTree';
+import { NameActions } from './NameActions';
+import { ValueActions } from './ValueActions';
 
 export const variableRenderer: HomeTreeRenderer['groupVariable'] = {
   name: {
@@ -31,11 +31,7 @@ export const variableRenderer: HomeTreeRenderer['groupVariable'] = {
       </Observer>
     ),
     renderActions: ({ data, treeItem, provider }) => (
-      <VariableNameActionsCell
-        data={data}
-        treeItem={treeItem}
-        itemProvider={provider}
-      />
+      <NameActions data={data} treeItem={treeItem} itemProvider={provider} />
     ),
   },
   value: {
@@ -53,6 +49,6 @@ export const variableRenderer: HomeTreeRenderer['groupVariable'] = {
         )}
       </Observer>
     ),
-    renderActions: ({ data }) => <VariableValueActionsCell data={data} />,
+    renderActions: ({ data }) => <ValueActions data={data} />,
   },
 };

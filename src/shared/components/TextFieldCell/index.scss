@@ -25,5 +25,10 @@
     &.state-error {
       color: var(--status-error-foreground);
     }
+
+    &.text-null::placeholder {
+      font-style: italic;
+      color: var(--status-info-foreground);
+    }
   }
 }

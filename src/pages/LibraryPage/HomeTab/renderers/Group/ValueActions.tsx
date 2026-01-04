@@ -6,13 +6,9 @@ import { getVariableGroupById } from '@/features/variable-groups/hooks/useVariab
 import type { ObservableVariableGroup } from '@/features/variable-groups/models';
 import { StateIcon } from '@/shared/components/StateIcon';
 import { useTreeRow } from '@/shared/components/Tree/useTreeRow';
-import { expandObject } from '@/shared/lib/exportHelper';
+import { downloadFile, expandObject } from '@/shared/lib/exportHelper';
 
-export const GroupValueActionsCell = ({
-  data,
-}: {
-  data: ObservableVariableGroup;
-}) => {
+export const ValueActions = ({ data }: { data: ObservableVariableGroup }) => {
   const { onBlur, hasMouse, hasFocus } = useTreeRow();
   const hasMouseOrFocus = hasMouse || hasFocus;
 
@@ -91,6 +87,3 @@ export const GroupValueActionsCell = ({
     />
   );
 };
-function downloadFile(jsonText: string, arg1: string, arg2: string) {
-  throw new Error('Function not implemented.');
-}

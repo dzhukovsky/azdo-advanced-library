@@ -5,15 +5,17 @@ import { ObservableObjectValue } from './ObservableObjectValue';
 
 export abstract class StateObject<T> extends ObservableObject<T> {
   readonly state: ObservableObjectValue<State>;
+  readonly isNew: boolean;
 
-  constructor(isNew: boolean) {
+  constructor(isNew: boolean, initialState?: State) {
     super();
-    const initialState = isNew ? States.New : States.Unchanged;
-    this.state = new ObservableObjectValue(initialState, statesEqual);
+    this.isNew = isNew;
+
+    const state = isNew ? States.New : States.Unchanged;
+    this.state = new ObservableObjectValue(initialState ?? state, statesEqual);
 
     this.subscribe(() => {
-      this.state.value =
-        this.modified && !isNew ? States.Modified : initialState;
+      this.state.value = this.modified && !isNew ? States.Modified : state;
     });
   }
 }

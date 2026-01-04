@@ -11,7 +11,7 @@ import { useVariableGroups } from '@/features/variable-groups/hooks/useVariableG
 import { mapVariableGroups } from '@/features/variable-groups/mapVariableGroups';
 import { useSubscribtion } from '@/shared/lib/observable';
 import { HomeTabModel } from './HomeTabModel';
-import { type HomeTreeItem, VariablesTree } from './VariablesTree';
+import { HomeTree, type HomeTreeItem } from './HomeTree';
 
 type TabContext = {
   items: ITreeItem<HomeTreeItem>[];
@@ -53,9 +53,7 @@ export const HomeTab = ({
     return <div>Error: {(error as Error).message}</div>;
   }
 
-  return (
-    <VariablesTree items={context.items} filter={filter} loading={isLoading} />
-  );
+  return <HomeTree items={context.items} filter={filter} loading={isLoading} />;
 };
 
 const mapTreeItems = (model: HomeTabModel) => {

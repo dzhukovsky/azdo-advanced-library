@@ -1,0 +1,79 @@
+import { IconSize } from 'azure-devops-ui/Icon';
+import { Observer } from 'azure-devops-ui/Observer';
+import { css } from 'azure-devops-ui/Util';
+import { States } from '@/shared/components/StateIcon';
+import { TextFieldCell } from '@/shared/components/TextFieldCell';
+import type { MatrixTreeRenderer } from '../MatrixTree';
+import { NameActions } from './NameActions';
+import { ValueActions } from './ValueActions';
+
+export const variableRenderer: MatrixTreeRenderer['variable'] = {
+  name: {
+    renderCell: ({ data }) => (
+      <Observer state={data.state} isSecret={data.isSecret}>
+        {({ state, isSecret }) => (
+          <TextFieldCell
+            value={data.name}
+            state={state}
+            iconProps={{
+              iconName:
+                isSecret == null
+                  ? 'fluent-WarningColor'
+                  : isSecret
+                    ? 'fluent-KeyRegular'
+                    : 'fluent-MathFormulaRegular',
+              style: {
+                paddingLeft: 0,
+                marginLeft: 0,
+              },
+              size: IconSize.medium,
+              tooltipProps:
+                isSecret == null
+                  ? {
+                      text: 'Variable has mixed secret types',
+                    }
+                  : undefined,
+            }}
+            onChange={(e) => {
+              data.name.value = e.target.value;
+            }}
+          />
+        )}
+      </Observer>
+    ),
+    renderActions: ({ data }) => <NameActions data={data} />,
+  },
+  value: {
+    renderCell: ({ data, columnId }) => {
+      const variable = data.values[+columnId];
+
+      return (
+        <Observer state={variable.state} isSecret={data.isSecret}>
+          {({ state, isSecret }) => {
+            const isUndefined = variable.isNew && state === States.Unchanged;
+
+            return (
+              <TextFieldCell
+                value={variable.value}
+                state={state}
+                type={
+                  (isSecret ?? variable.isSecretInitial) ? 'password' : 'text'
+                }
+                className={css(isUndefined && 'text-null')}
+                readOnly={isUndefined}
+                placeholder={isUndefined ? 'NULL' : undefined}
+                onChange={(e) => {
+                  variable.value.value = e.target.value;
+                }}
+              />
+            );
+          }}
+        </Observer>
+      );
+    },
+    renderActions: ({ data, columnId }) => {
+      const variable = data.values[+columnId];
+      return <ValueActions data={variable} />;
+    },
+  },
+};

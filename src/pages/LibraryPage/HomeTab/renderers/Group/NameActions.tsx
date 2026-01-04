@@ -8,9 +8,9 @@ import {
   type ObservableVariableGroup,
 } from '@/features/variable-groups/models';
 import { useTreeRow } from '@/shared/components/Tree/useTreeRow';
-import type { HomeTreeItem } from '../VariablesTree';
+import type { HomeTreeItem } from '../../HomeTree';
 
-export const GroupNameActionsCell = ({
+export const NameActions = ({
   data,
   treeItem,
   rowIndex,

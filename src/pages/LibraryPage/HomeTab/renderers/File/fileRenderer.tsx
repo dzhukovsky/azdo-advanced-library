@@ -1,29 +1,20 @@
 import { IconSize } from 'azure-devops-ui/Icon';
 import { renderListCell } from 'azure-devops-ui/List';
 import { LastModifiedByCell } from '@/shared/components/LastModifiedByCell';
-import { GroupNameActionsCell } from '../ActionCells/GroupNameActionsCell';
-import { GroupValueActionsCell } from '../ActionCells/GroupValueActionsCell';
-import type { HomeTreeRenderer } from '../VariablesTree';
+import type { HomeTreeRenderer } from '../../HomeTree';
 
-export const groupRenderer: HomeTreeRenderer['group'] = {
+export const fileRenderer: HomeTreeRenderer['file'] = {
   name: {
     renderCell: ({ data }) =>
       renderListCell({
         text: data.name.value,
         textClassName: 'padding-vertical-8',
         iconProps: {
-          iconName: 'fluent-LibraryColor',
+          iconName: 'fluent-DocumentKeyRegular',
           size: IconSize.medium,
         },
       }),
-    renderActions: ({ data, treeItem, rowIndex, provider }) => (
-      <GroupNameActionsCell
-        data={data}
-        treeItem={treeItem}
-        rowIndex={rowIndex}
-        itemProvider={provider}
-      />
-    ),
+    renderActions: () => null,
   },
   value: {
     renderCell: ({ data }) =>
@@ -34,6 +25,6 @@ export const groupRenderer: HomeTreeRenderer['group'] = {
           modifiedOn={data.modifiedOn}
         />
       ),
-    renderActions: ({ data }) => <GroupValueActionsCell data={data} />,
+    renderActions: () => null,
   },
 };

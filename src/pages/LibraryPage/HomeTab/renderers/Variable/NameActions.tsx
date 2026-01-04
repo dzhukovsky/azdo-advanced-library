@@ -6,9 +6,9 @@ import type {
 import type { ObservableVariable } from '@/features/variable-groups/models';
 import { States } from '@/shared/components/StateIcon';
 import { useTreeRow } from '@/shared/components/Tree/useTreeRow';
-import type { HomeTreeItem } from '../VariablesTree';
+import type { HomeTreeItem } from '../../HomeTree';
 
-export const VariableNameActionsCell = ({
+export const NameActions = ({
   data,
   treeItem,
   itemProvider,
