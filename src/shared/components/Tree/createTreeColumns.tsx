@@ -37,7 +37,7 @@ export function createTreeColumns<
       ? createExpandableActionColumn<TData>({
           ...column,
           id,
-          ...getRenderers(id, renderers, itemProvider),
+          ...getRenderers(id, renderers, itemProvider, id, column.name),
           contentClassName: 'padding-vertical-0 padding-right-0',
         })
       : createActionColumn<TData>({
@@ -61,6 +61,7 @@ export function getRenderers<
   renderers: TTreeRenderer,
   itemProvider: ITreeItemProvider<TData>,
   columnId?: string,
+  columnName?: string,
 ): {
   renderCell: RenderHandler<TData>;
   renderActions: RenderHandler<TData>;
@@ -74,6 +75,7 @@ export function getRenderers<
         data: options.data.data,
         provider: itemProvider,
         columnId: columnId ?? rendererName,
+        columnName: columnName ?? rendererName,
       });
     },
     renderActions: (options) => {
@@ -84,6 +86,7 @@ export function getRenderers<
         data: options.data.data,
         provider: itemProvider,
         columnId: columnId ?? rendererName,
+        columnName: columnName ?? rendererName,
       });
     },
   };

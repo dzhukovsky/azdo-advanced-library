@@ -2,10 +2,10 @@ import { Button } from 'azure-devops-ui/Button';
 import { Observer } from 'azure-devops-ui/Observer';
 import type { ObservableMatrixValue } from '@/features/variable-groups/models';
 import { StateIcon, States } from '@/shared/components/StateIcon';
-import { useTreeRow } from '@/shared/components/Tree/useTreeRow';
+import { useTreeCell } from '@/shared/components/Tree/useTreeCell';
 
 export const ValueActions = ({ data }: { data: ObservableMatrixValue }) => {
-  const { hasMouse, hasFocus, onBlur } = useTreeRow();
+  const { hasMouse, hasFocus, onBlur } = useTreeCell();
   const hasMouseOrFocus = hasMouse || hasFocus;
 
   if (!hasMouseOrFocus) {

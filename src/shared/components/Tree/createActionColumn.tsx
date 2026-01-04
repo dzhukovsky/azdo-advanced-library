@@ -1,8 +1,12 @@
 import { ObservableLike } from 'azure-devops-ui/Core/Observable';
+import { FocusOrMouseWithin } from 'azure-devops-ui/FocusOrMouseWithin';
+import type { IFocusWithinStatus } from 'azure-devops-ui/FocusWithin';
+import type { IMouseWithinStatus } from 'azure-devops-ui/MouseWithin';
 import { TableCell } from 'azure-devops-ui/Table';
 import type { ITreeColumn } from 'azure-devops-ui/TreeEx';
 import type { ITreeItemEx } from 'azure-devops-ui/Utilities/TreeItemProvider';
 import { memo } from 'react';
+import { TreeCellContext } from './useTreeCell';
 
 export type RenderHandler<T> = (options: RenderOptions<T>) => React.ReactNode;
 
@@ -87,10 +91,23 @@ const ActionCell = memo(
         ariaRowIndex={ariaRowIndex}
         role={role}
       >
-        <div className="flex-row flex-grow">
-          {renderCell(options)}
-          {renderActions(options)}
-        </div>
+        <FocusOrMouseWithin>
+          {(props: IMouseWithinStatus & IFocusWithinStatus) => (
+            <div
+              role="none"
+              className="flex-row flex-grow"
+              onBlur={props.onBlur}
+              onFocus={props.onFocus}
+              onMouseEnter={props.onMouseEnter}
+              onMouseLeave={props.onMouseLeave}
+            >
+              <TreeCellContext.Provider value={props}>
+                {renderCell(options)}
+                {renderActions(options)}
+              </TreeCellContext.Provider>
+            </div>
+          )}
+        </FocusOrMouseWithin>
       </TableCell>
     );
   },

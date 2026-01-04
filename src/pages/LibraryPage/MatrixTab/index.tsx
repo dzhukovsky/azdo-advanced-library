@@ -66,6 +66,14 @@ export const MatrixTab = ({ filter }: MatrixTabProps) => {
       items={context.items}
       filter={filter}
       loading={isLoading}
+      addNewVariable={() => {
+        context.model.addNewVariable();
+        const items = mapTreeItems(context.model);
+        setContext((prev) => ({
+          ...prev,
+          items,
+        }));
+      }}
     />
   );
 };

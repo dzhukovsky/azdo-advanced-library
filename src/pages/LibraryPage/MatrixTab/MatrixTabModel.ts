@@ -3,6 +3,7 @@ import {
   ObservableMatrixVariable,
   type VariableGroupId,
 } from '@/features/variable-groups/models';
+import { States } from '@/shared/components/StateIcon';
 import {
   ObservableObject,
   type ObservableObjectArray,
@@ -22,9 +23,11 @@ export class MatrixTabModel extends ObservableObject<MatrixTabModel> {
   }
 
   addNewVariable() {
-    const values = this.variableGroupIds.map(
-      (groupId) => new ObservableMatrixValue(groupId, '', false, true),
-    );
+    const values = this.variableGroupIds.map((groupId) => {
+      const value = new ObservableMatrixValue(groupId, '', false, true);
+      value.state.value = States.New;
+      return value;
+    });
 
     const newVariable = new ObservableMatrixVariable('', values, false);
 

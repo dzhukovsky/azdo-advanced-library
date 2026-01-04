@@ -15,6 +15,7 @@ export const variableRenderer: MatrixTreeRenderer['variable'] = {
           <TextFieldCell
             value={data.name}
             state={state}
+            placeholder="Name (required)"
             iconProps={{
               iconName:
                 isSecret == null

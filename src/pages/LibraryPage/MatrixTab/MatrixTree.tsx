@@ -30,6 +30,7 @@ export type MatrixTreeProps = {
   groupNames: VariableGroupName[];
   filter: IFilter;
   loading?: boolean;
+  addNewVariable: () => void;
 };
 
 export type MatrixVariableFolder = {
@@ -116,6 +117,7 @@ const useColumns = (
             renderers,
             itemProvider,
             groupName.id.toString(),
+            groupName.name,
           ),
         }),
       ),
@@ -132,6 +134,7 @@ export const MatrixTree = ({
   groupNames,
   filter,
   loading,
+  addNewVariable,
 }: MatrixTreeProps) => {
   const { filteredItems, isEmpty } = useFiltering(items, filter, filterFunc);
 
@@ -164,7 +167,7 @@ export const MatrixTree = ({
           <Button
             iconProps={{ iconName: 'Add' }}
             text="Add new variable"
-            // onClick={addNewVariable}
+            onClick={addNewVariable}
           />
         </div>
       </div>
