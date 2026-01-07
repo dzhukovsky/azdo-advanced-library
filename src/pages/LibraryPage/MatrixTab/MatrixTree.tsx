@@ -1,6 +1,9 @@
 import { Button } from 'azure-devops-ui/Button';
 import { Card } from 'azure-devops-ui/Card';
-import { ObservableValue } from 'azure-devops-ui/Core/Observable';
+import {
+  type IReadonlyObservableArray,
+  ObservableValue,
+} from 'azure-devops-ui/Core/Observable';
 import { type ITreeColumn, Tree } from 'azure-devops-ui/TreeEx';
 import { css } from 'azure-devops-ui/Util';
 import type { IFilter } from 'azure-devops-ui/Utilities/Filter';
@@ -16,7 +19,7 @@ import { createExpandableActionColumn } from '@/shared/components/Tree/createExp
 import { getRenderers } from '@/shared/components/Tree/createTreeColumns';
 import { getLoadingProvider } from '@/shared/components/Tree/loadingProvider';
 import type { TreeRenderer, TypedData } from '@/shared/components/Tree/types';
-import { useFiltering } from '@/shared/components/Tree/useFiltering';
+import { useObservableFiltering } from '@/shared/components/Tree/useFiltering';
 import { useRowRenderer } from '@/shared/components/Tree/useRowRenderer';
 import { folderRenderer, variableRenderer } from './renderers';
 
@@ -26,7 +29,7 @@ export type VariableGroupName = {
 };
 
 export type MatrixTreeProps = {
-  items: ITreeItem<MatrixTreeItem>[];
+  items: IReadonlyObservableArray<ITreeItem<MatrixTreeItem>>;
   groupNames: VariableGroupName[];
   filter: IFilter;
   loading?: boolean;
@@ -61,21 +64,9 @@ const filterFunc: FilterFunc<MatrixTreeItem> = (item, filterText) => {
 
   switch (item.type) {
     case 'folder':
-      return (
-        item.data.folderName?.toLocaleLowerCase().includes(filterText) ||
-        item.data.variables.some((variable) =>
-          Object.values(variable.values).some((x) =>
-            x.value.value?.toLocaleLowerCase().includes(filterText),
-          ),
-        )
-      );
+      return item.data.folderName?.toLocaleLowerCase().includes(filterText);
     case 'variable':
-      return (
-        item.data.name.value?.toLocaleLowerCase().includes(filterText) ||
-        Object.values(item.data.values).some((x) =>
-          x.value.value?.toLocaleLowerCase().includes(filterText),
-        )
-      );
+      return item.data.search(filterText);
   }
 };
 
@@ -136,8 +127,11 @@ export const MatrixTree = ({
   loading,
   addNewVariable,
 }: MatrixTreeProps) => {
-  const { filteredItems, isEmpty } = useFiltering(items, filter, filterFunc);
-
+  const { filteredItems, isEmpty } = useObservableFiltering(
+    items,
+    filter,
+    filterFunc,
+  );
   const { columns } = useColumns(groupNames, filteredItems);
 
   const renderRow = useRowRenderer(columns);

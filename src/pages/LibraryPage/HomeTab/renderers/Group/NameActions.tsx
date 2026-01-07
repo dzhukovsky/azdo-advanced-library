@@ -33,6 +33,7 @@ export const NameActions = ({
       subtle
       iconProps={{ iconName: 'Add' }}
       tooltipProps={{ text: 'Add new variable' }}
+      onMouseDown={(e) => e.preventDefault()}
       onClick={(e) => {
         const variable = new ObservableVariable('', '', false, true);
         data.variables.push(variable);

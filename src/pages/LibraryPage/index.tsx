@@ -259,7 +259,11 @@ const useHeader = (
 
   const renderTabBarCommands = useCallback(
     () => (
-      <InlineKeywordFilterBarItem filter={filter} filterItemKey="keyword" />
+      <InlineKeywordFilterBarItem
+        filter={filter}
+        filterItemKey="keyword"
+        isTextItem={false}
+      />
     ),
     [filter],
   );

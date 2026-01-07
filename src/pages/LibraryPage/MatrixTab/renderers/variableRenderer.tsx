@@ -10,10 +10,10 @@ import { ValueActions } from './ValueActions';
 export const variableRenderer: MatrixTreeRenderer['variable'] = {
   name: {
     renderCell: ({ data }) => (
-      <Observer state={data.state} isSecret={data.isSecret}>
+      <Observer state={data.name.state} isSecret={data.name.isSecret}>
         {({ state, isSecret }) => (
           <TextFieldCell
-            value={data.name}
+            value={data.name.name}
             state={state}
             placeholder="Name (required)"
             iconProps={{
@@ -36,7 +36,7 @@ export const variableRenderer: MatrixTreeRenderer['variable'] = {
                   : undefined,
             }}
             onChange={(e) => {
-              data.name.value = e.target.value;
+              data.name.name.value = e.target.value;
             }}
           />
         )}
@@ -49,7 +49,7 @@ export const variableRenderer: MatrixTreeRenderer['variable'] = {
       const variable = data.values[+columnId];
 
       return (
-        <Observer state={variable.state} isSecret={data.isSecret}>
+        <Observer state={variable.state} isSecret={data.name.isSecret}>
           {({ state, isSecret }) => {
             const isUndefined = variable.isNew && state === States.Unchanged;
 
@@ -74,7 +74,9 @@ export const variableRenderer: MatrixTreeRenderer['variable'] = {
     },
     renderActions: ({ data, columnId }) => {
       const variable = data.values[+columnId];
-      return <ValueActions data={variable} />;
+      return (
+        <ValueActions data={variable} variable={data} groupId={+columnId} />
+      );
     },
   },
 };

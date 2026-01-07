@@ -37,6 +37,11 @@ function useDerivedObservableArray<T>(
 function useDerivedObservableArray<TSource, T>(
   sourceObservable: IReadonlyObservableArray<TSource>,
   getDerivedValue: (src: TSource[]) => T[],
+): IObservableArray<T>;
+
+function useDerivedObservableArray<TSource, T>(
+  sourceObservable: IReadonlyObservableArray<TSource>,
+  getDerivedValue: (src: TSource[]) => T[],
   callbackDependencies: DependencyList,
 ): IObservableArray<T>;
 

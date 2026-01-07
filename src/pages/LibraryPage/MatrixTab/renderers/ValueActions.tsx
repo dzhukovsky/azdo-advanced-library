@@ -1,30 +1,52 @@
 import { Button } from 'azure-devops-ui/Button';
 import { Observer } from 'azure-devops-ui/Observer';
-import type { ObservableMatrixValue } from '@/features/variable-groups/models';
+import { useCallback } from 'react';
+import type {
+  GroupId,
+  ObservableMatrixValue,
+  ObservableMatrixVariable,
+} from '@/features/variable-groups/models';
 import { StateIcon, States } from '@/shared/components/StateIcon';
 import { useTreeCell } from '@/shared/components/Tree/useTreeCell';
+import { useTreeRow } from '@/shared/components/Tree/useTreeRow';
 
-export const ValueActions = ({ data }: { data: ObservableMatrixValue }) => {
-  const { hasMouse, hasFocus, onBlur } = useTreeCell();
-  const hasMouseOrFocus = hasMouse || hasFocus;
+export const ValueActions = ({
+  data,
+  variable,
+  groupId,
+}: {
+  data: ObservableMatrixValue;
+  variable: ObservableMatrixVariable;
+  groupId: GroupId;
+}) => {
+  const { onBlur: onRowBlur } = useTreeRow();
+  const { hasMouse, hasFocus, onBlur: onCellBlur } = useTreeCell();
 
-  if (!hasMouseOrFocus) {
-    return <StateIcon state={data.state.value} />;
-  }
+  const onBlur = useCallback(() => {
+    onCellBlur?.();
+    onRowBlur?.();
+  }, [onCellBlur, onRowBlur]);
 
   return (
-    <Observer state={data.state} isNew={data.isNew}>
-      {({ state, isNew }) => {
+    <Observer
+      state={data.state}
+      isNew={data.isNew}
+      hasMouseOrFocus={hasMouse || hasFocus}
+    >
+      {({ state, isNew, hasMouseOrFocus }) => {
+        if (!hasMouseOrFocus) {
+          return <StateIcon state={state} />;
+        }
+
         if (state === States.Deleted) {
           return (
             <Button
               subtle
               iconProps={{ iconName: 'Undo' }}
               tooltipProps={{ text: 'Restore value' }}
+              onMouseDown={(e) => e.preventDefault()}
               onClick={() => {
-                data.state.value = data.modified
-                  ? States.Modified
-                  : States.Unchanged;
+                variable.restoreVariable(groupId);
                 onBlur?.();
               }}
             />
@@ -37,6 +59,7 @@ export const ValueActions = ({ data }: { data: ObservableMatrixValue }) => {
               subtle
               iconProps={{ iconName: 'Add' }}
               tooltipProps={{ text: 'Add new variable' }}
+              onMouseDown={(e) => e.preventDefault()}
               onClick={(e) => {
                 data.state.value = States.New;
                 const element = e.currentTarget;
@@ -52,16 +75,10 @@ export const ValueActions = ({ data }: { data: ObservableMatrixValue }) => {
             subtle
             iconProps={{ iconName: 'Delete' }}
             tooltipProps={{ text: 'Delete value' }}
+            onMouseDown={(e) => e.preventDefault()}
             onClick={() => {
-              if (isNew) {
-                data.value.reset();
-                data.state.reset();
-                onBlur?.();
-
-                return;
-              }
-
-              data.state.value = States.Deleted;
+              variable.deleteVariable(groupId);
+              onBlur?.();
             }}
           />
         );

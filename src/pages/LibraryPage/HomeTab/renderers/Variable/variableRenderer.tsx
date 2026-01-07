@@ -30,9 +30,7 @@ export const variableRenderer: HomeTreeRenderer['groupVariable'] = {
         )}
       </Observer>
     ),
-    renderActions: ({ data, treeItem, provider }) => (
-      <NameActions data={data} treeItem={treeItem} itemProvider={provider} />
-    ),
+    renderActions: ({ data }) => <NameActions data={data} />,
   },
   value: {
     renderCell: ({ data }) => (
@@ -49,6 +47,8 @@ export const variableRenderer: HomeTreeRenderer['groupVariable'] = {
         )}
       </Observer>
     ),
-    renderActions: ({ data }) => <ValueActions data={data} />,
+    renderActions: ({ data, treeItem, provider }) => (
+      <ValueActions data={data} treeItem={treeItem} itemProvider={provider} />
+    ),
   },
 };

@@ -1,3 +1,4 @@
+import type { IReadonlyObservableArray } from 'azure-devops-ui/Core/Observable';
 import {
   FILTER_CHANGE_EVENT,
   type IFilter,
@@ -16,7 +17,6 @@ function filterItems<T>(
 ): ITreeItem<T>[] {
   const filterText =
     filter.getFilterItemValue<string>('keyword')?.toLocaleLowerCase() ?? '';
-
   return items
     .map((item) => ({
       ...item,
@@ -51,6 +51,39 @@ export function useFiltering<T>(
 
     filter.subscribe(onChange, FILTER_CHANGE_EVENT);
     return () => filter.unsubscribe(onChange, FILTER_CHANGE_EVENT);
+  }, [items, filter, filterFunc, filteredItems]);
+
+  return { filteredItems, isEmpty };
+}
+
+export function useObservableFiltering<T>(
+  items: IReadonlyObservableArray<ITreeItem<T>>,
+  filter: IFilter,
+  filterFunc: FilterFunc<T>,
+) {
+  const filteredItems = useMemo(() => new TreeItemProvider<T>(), []);
+  const [isEmpty, setIsEmpty] = useState(true);
+
+  useEffect(() => {
+    const onChange = () => {
+      const filtered = filterItems(items.value, filter, filterFunc);
+      filteredItems.splice(undefined, filteredItems.roots, [
+        {
+          items: filtered,
+        },
+      ]);
+      setIsEmpty(filtered.length === 0);
+    };
+
+    onChange();
+
+    items.subscribe(onChange);
+    filter.subscribe(onChange, FILTER_CHANGE_EVENT);
+
+    return () => {
+      items.unsubscribe(onChange);
+      filter.unsubscribe(onChange, FILTER_CHANGE_EVENT);
+    };
   }, [items, filter, filterFunc, filteredItems]);
 
   return { filteredItems, isEmpty };
